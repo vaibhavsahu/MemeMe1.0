@@ -29,14 +29,15 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZyX-Lx-Oyn">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <items>
-                                    <barButtonItem systemItem="camera" id="0Hu-Zk-bAf">
+                                    <barButtonItem style="plain" systemItem="camera" id="AxU-BY-AET">
+                                        <inset key="imageInsets" minX="80" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
-                                            <action selector="pickImageFromCamera:" destination="BYZ-38-t0r" id="08f-TB-MkR"/>
+                                            <action selector="pickImageFromCamera:" destination="BYZ-38-t0r" id="d0i-29-HrO"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Album" id="y2P-MU-Wnn">
+                                    <barButtonItem title="Album" width="352.5" style="plain" id="yhd-0E-Rbi">
                                         <connections>
-                                            <action selector="pickImageFromAlbum:" destination="BYZ-38-t0r" id="hGH-JV-mTe"/>
+                                            <action selector="pickImageFromAlbum:" destination="BYZ-38-t0r" id="Soj-1x-2Tt"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -47,13 +48,13 @@
                                     <barButtonItem systemItem="action" id="qza-2n-C6j"/>
                                 </items>
                             </toolbar>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pa3-43-ocZ">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pa3-43-ocZ">
                                 <rect key="frame" x="66" y="83" width="252" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zQd-kV-U88">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zQd-kV-U88">
                                 <rect key="frame" x="66" y="577" width="252" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -86,7 +87,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="bottomTextField" destination="zQd-kV-U88" id="NX7-JS-fM4"/>
+                        <outlet property="cameraButton" destination="AxU-BY-AET" id="GqJ-8W-N86"/>
                         <outlet property="imageView" destination="KQS-md-tuh" id="qNs-Bc-2bu"/>
+                        <outlet property="topTextField" destination="Pa3-43-ocZ" id="sYZ-qX-iuK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
