@@ -46,14 +46,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        //subscribeToKeyboardNotifications()
+        subscribeToKeyboardNotifications()
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         
         super.viewWillDisappear(animated)
-        //unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -72,12 +72,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @objc func keyboardWillShow(_ notification:Notification) {
-        if bottomTextField.isFirstResponder {
+        /*if bottomTextField.isFirstResponder {
             self.view.frame.origin.y -= getKeyboardHeight(notification);
         }
         else if topTextField.isFirstResponder {
             self.view.frame.origin.y = 0;
-        }
+        }*/
+        view.frame.origin.y -= getKeyboardHeight(notification)
     }
     func getKeyboardHeight(_ notification:Notification) -> CGFloat {
         
