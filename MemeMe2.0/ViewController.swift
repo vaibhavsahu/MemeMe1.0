@@ -16,16 +16,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
         NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
         NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSAttributedStringKey.strokeWidth.rawValue: -3.0
+    
+    NSAttributedStringKey.strokeWidth.rawValue: -3.0
         //NSAttributedStringKey.
         
     ]
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var imageView: UIImageView!
     
+    
     @IBOutlet weak var topTextField: UITextField!
     
     @IBOutlet weak var bottomTextField: UITextField!
+    
+    
+    
+    @IBOutlet weak var shareButton: UIBarButtonItem!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         topTextField.delegate = self
@@ -41,11 +49,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         topTextField.textAlignment = .center
         bottomTextField.textAlignment = .center
+        
+        //initially set the share button to disabled state
+        shareButton.isEnabled = false
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        
+        //if image is available in Meme Editor, sharebutton will be enabled else it is set to be disabled
+        
         subscribeToKeyboardNotifications()
         
     }
@@ -59,11 +73,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+  
     
     func subscribeToKeyboardNotifications() {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillShow, object: nil)
+
     }
     
     func unsubscribeFromKeyboardNotifications() {
@@ -72,13 +88,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @objc func keyboardWillShow(_ notification:Notification) {
-        /*if bottomTextField.isFirstResponder {
+       /* if bottomTextField.isFirstResponder {
             self.view.frame.origin.y -= getKeyboardHeight(notification);
         }
         else if topTextField.isFirstResponder {
-            self.view.frame.origin.y = 0;
+            self.view.frame.origin.y = 0
         }*/
-        view.frame.origin.y -= getKeyboardHeight(notification)
+        self.view.frame.origin.y -= getKeyboardHeight(notification)
+    }
+    
+    @objc func keyboardWillHide(_ notification:Notification) {
+        self.view.frame.origin.y = 0
     }
     func getKeyboardHeight(_ notification:Notification) -> CGFloat {
         
@@ -94,6 +114,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        self.view.frame.origin.y = 0
         return true
     }
     //user selects the image picker controller
@@ -102,6 +123,42 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageView.image = image
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    
+    func save() {
+        // Create the meme
+        _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: generateMemedImage())
+    }
+    
+    func generateMemedImage() -> UIImage {
+        
+        // TODO: Hide toolbar and navbar
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setToolbarHidden(true, animated: true)
+        
+        // Render view to an image
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        // TODO: Show toolbar and navbar
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setToolbarHidden(false, animated: false)
+        
+        return memedImage
+    }
+    
+    
+    @IBAction func shareActivityAction(_ sender: Any) {
+        //generate a memed image
+        let memedImage: UIImage = generateMemedImage()
+        let memedImageToShare = [memedImage]
+        
+        let activityViewController = UIActivityViewController(activityItems: memedImageToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        present(activityViewController, animated: true, completion: nil)
     }
     
     //user cancels the image picker controller
@@ -124,6 +181,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
         present(imagePicker, animated: true , completion: nil)
+        shareButton.isEnabled = true
     }
 }
 
