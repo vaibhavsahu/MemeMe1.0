@@ -39,7 +39,9 @@
 	<key>Privacy - Camera Usage Description </key>
 	<string>Camera usage</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photos usage</string>
+	<string>Allow user to save photos to device</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow user to save photos to device</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

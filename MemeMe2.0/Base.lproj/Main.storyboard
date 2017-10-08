@@ -92,10 +92,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="bottomBar" destination="ZyX-Lx-Oyn" id="7Vz-Mz-EUB"/>
                         <outlet property="bottomTextField" destination="zQd-kV-U88" id="NX7-JS-fM4"/>
                         <outlet property="cameraButton" destination="AxU-BY-AET" id="GqJ-8W-N86"/>
                         <outlet property="imageView" destination="KQS-md-tuh" id="qNs-Bc-2bu"/>
                         <outlet property="shareButton" destination="qza-2n-C6j" id="C3i-c6-RJt"/>
+                        <outlet property="topBar" destination="pak-TO-YW9" id="403-dT-4v9"/>
                         <outlet property="topTextField" destination="Pa3-43-ocZ" id="sYZ-qX-iuK"/>
                     </connections>
                 </viewController>

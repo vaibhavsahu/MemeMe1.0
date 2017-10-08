@@ -29,7 +29,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet weak var bottomTextField: UITextField!
     
+    @IBOutlet weak var bottomBar: UIToolbar!
     
+    @IBOutlet weak var topBar: UIToolbar!
     
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
@@ -52,6 +54,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         //initially set the share button to disabled state
         shareButton.isEnabled = false
+        
+        subscribeToKeyboardNotifications()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -60,14 +64,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         //if image is available in Meme Editor, sharebutton will be enabled else it is set to be disabled
         
-        subscribeToKeyboardNotifications()
-        
+        //subscribeToKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         
         super.viewWillDisappear(animated)
-        unsubscribeFromKeyboardNotifications()
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -85,21 +89,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func unsubscribeFromKeyboardNotifications() {
         
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
-    @objc func keyboardWillShow(_ notification:Notification) {
-       /* if bottomTextField.isFirstResponder {
-            self.view.frame.origin.y -= getKeyboardHeight(notification);
-        }
-        else if topTextField.isFirstResponder {
-            self.view.frame.origin.y = 0
-        }*/
-        self.view.frame.origin.y -= getKeyboardHeight(notification)
+    @objc func keyboardWillShow(_ notification:NSNotification) {
+        self.view.frame.origin.y -= getKeyboardHeight(notification as Notification)
     }
     
-    @objc func keyboardWillHide(_ notification:Notification) {
-        self.view.frame.origin.y = 0
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        self.view.frame.origin.y += getKeyboardHeight(notification as Notification)
     }
+    
     func getKeyboardHeight(_ notification:Notification) -> CGFloat {
         
         let userInfo = notification.userInfo
@@ -134,8 +134,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func generateMemedImage() -> UIImage {
         
         // TODO: Hide toolbar and navbar
-        navigationController?.setNavigationBarHidden(true, animated: true)
-        navigationController?.setToolbarHidden(true, animated: true)
+        topBar.isHidden = true
+        bottomBar.isHidden = true
         
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -144,8 +144,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         UIGraphicsEndImageContext()
         
         // TODO: Show toolbar and navbar
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.setToolbarHidden(false, animated: false)
+        topBar.isHidden = false
+        bottomBar.isHidden = false
         
         return memedImage
     }
@@ -158,6 +158,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         let activityViewController = UIActivityViewController(activityItems: memedImageToShare, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.completionWithItemsHandler = { (activity, success, items, error) in
+            if(success && error == nil){
+                //Do Work
+                self.save()
+                self.dismiss(animated:true, completion: nil);
+            }else if (error != nil){
+                //log the error
+            }
+        };
         present(activityViewController, animated: true, completion: nil)
     }
     
