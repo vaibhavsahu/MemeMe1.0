@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import Photos
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     //Meme text attributes
     let memeTextAttributes:[String:Any] = [
         NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
@@ -26,6 +26,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet weak var bottomTextField: UITextField!
     
+    var activeTextField: UITextField!
+    
     @IBOutlet weak var bottomBar: UIToolbar!
     
     @IBOutlet weak var topBar: UIToolbar!
@@ -35,35 +37,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        topTextField.delegate = self
-        bottomTextField.delegate = self
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        //initial text of textfields
-        topTextField.text! = "TOP"
-        bottomTextField.text! = "BOTTOM"
-        
-        //setting defualt attributes for textfields
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
-        
+//        // Do any additional setup after loading the view, typically from a nib.
+        configure(topTextField, defaultText: "TOP")
+        configure(bottomTextField, defaultText: "BOTTOM")
         //initially set the share button to disabled state
         shareButton.isEnabled = false
-        subscribeToKeyboardNotifications()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //if it is a simulator, camera button should be disabled else enabled
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        unsubscribeFromKeyboardNotifications()
+         subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        unsubscribeFromKeyboardNotifications()
     }
   
     //function: add observers to keyboard events
@@ -81,18 +71,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     //keyboard show function
-    @objc func keyboardWillShow(_ notification:NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
-            }
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if bottomTextField.isFirstResponder {
+            self.view.frame.origin.y -= getKeyboardHeight(notification)
+        } else{
+            self.view.frame.origin.y = 0
         }
-        //self.view.frame.origin.y -= getKeyboardHeight(notification as Notification)
     }
     
     //keyboard hide function
-    @objc func keyboardWillHide(_ notification: NSNotification) {
-        self.view.frame.origin.y = 0
+    @objc func keyboardWillHide(_ notification: Notification) {
+        UIView.animate(withDuration: 0.25, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+            self.view.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        }, completion: nil)
+    }
+    
+    //function: setup the various attributes for given textfield
+    func configure(_ textField: UITextField, defaultText: String){
+        //setting up delegate for textfield
+        textField.delegate = self
+        //setting up default text for textfield's text
+        textField.text! = defaultText
+        //setting up default text attributes for textfield
+        textField.defaultTextAttributes = memeTextAttributes
+        //alignment
+        textField.textAlignment = .center
     }
     
     //this function would return the keyboard height; this function would be used keyboardShow/Hide functions
@@ -106,8 +109,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //keyboard begin editing delegate method
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //clear the text as soon as users begin editing
+        activeTextField = textField
         textField.text! = ""
-       // bottomTextField.text! = ""
     }
     
     //keyboard return key delegate method
@@ -130,11 +133,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: generateMemedImage())
     }
     
+    func setToolbar(_ toolBar: UIToolbar, bool: Bool){
+        toolBar.isHidden = bool
+    }
+    
     func generateMemedImage() -> UIImage {
         
         // TODO: Hide toolbar and navbar
-        topBar.isHidden = true
-        bottomBar.isHidden = true
+        setToolbar(topBar, bool: true)
+        setToolbar(bottomBar, bool: true)
         
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -143,8 +150,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         UIGraphicsEndImageContext()
         
         // TODO: Show toolbar and navbar
-        topBar.isHidden = false
-        bottomBar.isHidden = false
+        setToolbar(topBar, bool: false)
+        setToolbar(bottomBar, bool: false)
         
         return memedImage
     }
@@ -172,20 +179,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
-    
-    //function: select source as camera to capture pics/memes
-    @IBAction func pickImageFromCamera(_ sender: Any) {
+
+    //function: depending upon UIBarButtonItem, imagepicker source will be selected
+    @IBAction func pickAnImage(_ sender: UIBarButtonItem) {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .camera
-        imagePicker.delegate = self
-        present(imagePicker, animated: true , completion: nil)
-        _ = UIImagePickerController.isSourceTypeAvailable(.camera)
-    }
-    
-    //function: select source as photo album for memes
-    @IBAction func pickImageFromAlbum(_ sender: Any) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .photoLibrary
+        if(sender.title == "Album"){
+            imagePicker.sourceType = .photoLibrary
+        } else {
+            imagePicker.sourceType = .camera
+        }
         imagePicker.delegate = self
         present(imagePicker, animated: true , completion: nil)
         shareButton.isEnabled = true

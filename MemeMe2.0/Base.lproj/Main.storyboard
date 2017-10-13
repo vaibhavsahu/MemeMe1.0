@@ -14,15 +14,15 @@
         </array>
     </customFonts>
     <scenes>
-        <!--View Controller-->
+        <!--Meme View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MemeMe2_0" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MemeViewController" customModule="MemeMe2_0" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KQS-md-tuh">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KQS-md-tuh">
                                 <rect key="frame" x="16" y="63" width="343" height="560"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
@@ -32,12 +32,12 @@
                                     <barButtonItem style="plain" systemItem="camera" id="AxU-BY-AET">
                                         <inset key="imageInsets" minX="80" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
-                                            <action selector="pickImageFromCamera:" destination="BYZ-38-t0r" id="d0i-29-HrO"/>
+                                            <action selector="pickAnImage:" destination="BYZ-38-t0r" id="Mqw-Bt-3zo"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Album" width="352.5" style="plain" id="yhd-0E-Rbi">
                                         <connections>
-                                            <action selector="pickImageFromAlbum:" destination="BYZ-38-t0r" id="Soj-1x-2Tt"/>
+                                            <action selector="pickAnImage:" destination="BYZ-38-t0r" id="c5I-mG-WRU"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -53,14 +53,14 @@
                                     <barButtonItem style="plain" systemItem="cancel" id="cLm-Zc-Qe1"/>
                                 </items>
                             </toolbar>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pa3-43-ocZ">
-                                <rect key="frame" x="66" y="83" width="252" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pa3-43-ocZ">
+                                <rect key="frame" x="66" y="83" width="252" height="20"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zQd-kV-U88">
-                                <rect key="frame" x="66" y="577" width="252" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zQd-kV-U88">
+                                <rect key="frame" x="66" y="567" width="252" height="17"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
@@ -71,17 +71,21 @@
                             <constraint firstItem="pak-TO-YW9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="7J3-zT-0gk"/>
                             <constraint firstItem="zQd-kV-U88" firstAttribute="trailing" secondItem="Pa3-43-ocZ" secondAttribute="trailing" id="8wO-Uz-cEu"/>
                             <constraint firstItem="pak-TO-YW9" firstAttribute="leading" secondItem="ZyX-Lx-Oyn" secondAttribute="leading" id="FuE-cf-VKe"/>
+                            <constraint firstItem="zQd-kV-U88" firstAttribute="top" secondItem="Pa3-43-ocZ" secondAttribute="bottom" constant="464" id="LFf-EU-Hj3"/>
                             <constraint firstItem="Pa3-43-ocZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="MMp-BE-UpQ"/>
                             <constraint firstItem="pak-TO-YW9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="P8U-LT-KMD"/>
+                            <constraint firstItem="zQd-kV-U88" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="66" id="RO0-dS-s3d"/>
                             <constraint firstItem="zQd-kV-U88" firstAttribute="leading" secondItem="Pa3-43-ocZ" secondAttribute="leading" id="Taw-LY-NuJ"/>
                             <constraint firstItem="pak-TO-YW9" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="V4m-ya-e2r"/>
                             <constraint firstItem="ZyX-Lx-Oyn" firstAttribute="top" secondItem="KQS-md-tuh" secondAttribute="bottom" id="YOw-qH-I3L"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zQd-kV-U88" secondAttribute="trailing" constant="57" id="ac1-V6-34A"/>
                             <constraint firstItem="KQS-md-tuh" firstAttribute="centerX" secondItem="pak-TO-YW9" secondAttribute="centerX" id="cwr-aG-9pf"/>
                             <constraint firstItem="zQd-kV-U88" firstAttribute="top" secondItem="Pa3-43-ocZ" secondAttribute="bottom" constant="464" id="eOV-jx-sVe"/>
                             <constraint firstItem="pak-TO-YW9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fHn-Pa-eMp"/>
                             <constraint firstItem="pak-TO-YW9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fWG-nQ-UhA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="KQS-md-tuh" secondAttribute="trailing" constant="16" id="gp0-YF-6pI"/>
                             <constraint firstItem="KQS-md-tuh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="43" id="guh-Tu-O62"/>
+                            <constraint firstItem="ZyX-Lx-Oyn" firstAttribute="top" secondItem="zQd-kV-U88" secondAttribute="bottom" constant="39" id="hhM-2o-wJK"/>
                             <constraint firstItem="ZyX-Lx-Oyn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="kmd-UN-P8e"/>
                             <constraint firstItem="ZyX-Lx-Oyn" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="kts-jo-R3U"/>
                             <constraint firstItem="KQS-md-tuh" firstAttribute="bottom" secondItem="ZyX-Lx-Oyn" secondAttribute="top" id="lJn-M2-iUA"/>
@@ -103,7 +107,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="48.799999999999997" y="56.221889055472268"/>
+            <point key="canvasLocation" x="-362" y="-20"/>
         </scene>
     </scenes>
 </document>
