@@ -82,7 +82,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     //keyboard show function
     @objc func keyboardWillShow(_ notification:NSNotification) {
-        self.view.frame.origin.y -= getKeyboardHeight(notification as Notification)
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if view.frame.origin.y == 0{
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+        //self.view.frame.origin.y -= getKeyboardHeight(notification as Notification)
     }
     
     //keyboard hide function
@@ -185,5 +190,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         present(imagePicker, animated: true , completion: nil)
         shareButton.isEnabled = true
     }
+    
+    @IBAction func onCancel(_ sender: Any) {
+    }
+    
 }
 
